@@ -3,7 +3,7 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
-permalink: /intro/
+permalink: /
 ---
 *Ceci est la première partie de l'atelier "Développez une application web qui n'explose pas".
 [Voir la suite ici]({{site.baseurl}}/demineur).*

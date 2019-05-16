@@ -6,7 +6,7 @@ layout: home
 permalink: /demineur/
 ---
 *Ceci est la deuxième partie de l'atelier "Développez une application web qui n'explose pas".
-[Retrouvez l'introduction ici]({{site.baseurl}}/intro).*
+[Retrouvez l'introduction ici]({{site.baseurl}}/).*
 
 Nous allons construire un clone du "démineur". Si vous ne
 connaissez pas, vous pouvez
