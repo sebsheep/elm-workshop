@@ -5,6 +5,16 @@
 layout: home
 permalink: /demineur/
 ---
+<style>
+    body {
+    counter-reset: chapter; /* create a chapter counter scope */
+}
+h1:before {
+    content: counter(chapter) ". ";
+    counter-increment: chapter; /* add 1 to chapter */
+}
+</style>
+
 *Ceci est la deuxième partie de l'atelier "Développez une application web qui n'explose pas".
 [Retrouvez l'introduction ici]({{site.baseurl}}/).*
 
