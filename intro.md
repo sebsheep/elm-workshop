@@ -69,7 +69,8 @@ add a b = a + b
 
 > **\>\>\> À vous de jouer !**
 >
-> Dans la console (`elm repl`), entrez successivement (en séparant les
+> Dans le REPL ([http://elmrepl.cuberoot.in/](http://elmrepl.cuberoot.in/){:target="_blank"}
+> ou `elm repl` en console), entrez successivement (en séparant les
 > lignes par un appui sur "Entrée") puis observez le résultat:
 > ```elm
 > 1 + 41
@@ -94,7 +95,7 @@ est également un nombre.
 > dans le REPL!
 
 
-Comme on vient de le voir, Elm peut calculer tout seul le type d'une fonction ;
+Comme on vient de le voir, Elm peut "calculer" tout seul le type d'une fonction (on dit *inférer* le type);
 cependant, dans un soucis de documentation du code, dans un vrai fichier source
 on rajoute le typage juste avant la fonction de cette manière:
 ```elm
@@ -103,8 +104,10 @@ add a b = a + b
 ```
 
 En Elm, la structure `if condition then valueA else valueB` est une valeur
-(c'est l'équivalent de l'opérateur ternaire `condition?valueA:valueB` de JS). La clause `else` est donc obligatoire,  `valueA` et `valueB` doivent
-avoir le même type `T`.
+(c'est l'équivalent de l'opérateur ternaire `condition?valueA:valueB` de JS). Choses à savoir :
+* la clause `else` est obligatoire,
+* `valueA` et `valueB` doivent, avoir le même type `T`.
+* `if condition then valueA else valueB` est une valeur de type `T`.
 
 Par exemple, on peut déterminer s'il est avant ou après midi:
 ```elm
@@ -113,9 +116,11 @@ displayHour hour = if hour < 12 then "morning!" else "afternoon!"
 
 > **\>\>\> À vous de jouer !**
 >
-> 1. Déterminez le type de `displayHour` et vérifiez votre réponse dans le >    REPL.
+> 1. Déterminez le type de `displayHour` et vérifiez votre réponse dans le
+>    REPL.
 > 2. Modifier la fonction pour qu'elle renvoie "night!" lorsque `hour` est
->    supérieur à 19.
+>    supérieur à 19 (et continue à afficher `morning!` ou `afternoon!` de
+>    façon adéquate).
 
 
 # Une application simple: le compteur
@@ -123,6 +128,15 @@ displayHour hour = if hour < 12 then "morning!" else "afternoon!"
 
 Dans cette partie, nous mettons en place une application implémentant un simple
 compteur.
+
+
+## Version en ligne
+
+Ouvrez juste l'adresse : [https://ellie-app.com](https://ellie-app.com){:target="_blank"} !
+Testez le code (rappel: `Ctrl + Maj + Entrée` pour compiler) puis rendez-vous directement à  [The Elm Architecture](#the-elm-architecture).
+
+
+## Version "local"
 
 > **\>\>\> À vous de jouer !**
 >
@@ -185,10 +199,9 @@ main =
 ```
 
 
-Nous allons maintenant expliquer comment fonctionne ce programme, mais avant,
-un peu de théorie.
-
 ## The Elm Architecture
+Un peu de théorie avant de poursuivre.
+
 Elm incorpore une architecture "Model - View - Update", qui peut être résumée
 par le schéma suivant:
 

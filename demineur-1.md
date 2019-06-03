@@ -36,66 +36,28 @@ booléens:
 * `revealed`
 * `isMine`
 
-Partons du squelette d'application suivant:
-```elm
-module Main exposing (main)
-
-import Browser
-import Html exposing (..)
-import Html.Attributes exposing (style)
+Partons du [squelette d'application suivant](https://ellie-app.com/5CZrhZ37M4va1){:target="_blank"}
 
 
-type alias Cell =
-    { isMine : Bool, revealed : Bool }
-
-
-type alias Model =
-    { cell : Cell }
-
-
-init : Model
-init =
-    { cell = { isMine = False, revealed = False } }
-
-
-type Msg
-    = NoOp -- pour l'instant, on ne gère pas de messages.
-
-
-update : Msg -> Model -> Model
-update msg model =
-    -- pour l'instant cette fonction ne fait rien
-    model
-
-
-view : Model -> Html Msg
-view model =
-    button [ style "width" "50px", style "height" "50px" ] [text " "]
-
-
-main =
-    Browser.sandbox
-        { view = view
-        , update = update
-        , init = init
-        }
-```
-
-*Rappel*: pour accéder aux attributs imbriquées, la syntaxe est identique
+*Rappel*: pour accéder aux attributs imbriqués, la syntaxe est identique
 à celle de JS. Par exemple pour accéder à l'attribut `isMine` de la cellule
 contenue dans le modèle, on écrit: `model.cell.isMine`.
 
 > **\>\>\> À vous de jouer !**
 >
-> 1. Modifiez la fonction `view` pour afficher une bombe si la cellule
+> 1. En utilisant un `if/then/else`,
+>    modifiez la fonction `view` pour afficher une bombe si la cellule
 >    est une bombe et la chaîne "0" sinon (on ignore pour l'instant
 >    l'attribut `revealed`). On pourra utiliser l'emoji
 >    suivant : 💣 (copiez-collez le dans votre code, c'est du texte !).
 > 2. Testez votre code, en remplaçant le `isMine = False` par
 >    `isMine = True` dans le
->    `init` et en recompilant.
+>    `init` puis en recompilant.
 > 3. Ajoutez la gestion de `revealed`: s'il est à faux, on n'affiche
 >    rien dans la case, sinon, on fait comme en 1.
+>
+>    Rappel astucieux: dans Ellie, en haut à droite de l'éditeur
+>    se trouve un bouton pour formatter votre code automatiquement !
 > 4. Testez votre code avec différentes combinaisons de `isMines`
 >    et `revealed` en recompilant à chaque fois.
 > 5. Extrayez le code que vous venez d'écrire dans une fonction
@@ -127,22 +89,34 @@ Quelques choses à savoir sur les listes:
    ```
    `foo` vaut alors `[2, 4, 6]` ; essayez dans le REPL !
 
-   Si on veut afficher "foo, bar, baz" en HTML, on
-   produit le code suivant (on rappelle que `text : String -> Html Msg`
+   Si on veut afficher une liste "foo, bar, baz" en HTML, on peut
+   utiliser le code suivant (on rappelle que `text : String -> Html Msg`
    transforme une string "brut" en Html):
    ```elm
-   div [] [text "foo", text "bar", text "baz"]
+   ul []
+    [ li [] [text "foo"]
+    , li [] [text "bar"]
+    , li [] [text "baz"]
+    ]
    ```
    On peut alors utiliser la fonction `List.map` pour simplifier le code:
    ```elm
-   div [] (List.map text ["foo", "bar", "baz"]) -- revient au même qu'avant!
+   displayItem : String -> Html Msg
+   displayItem itemDescription =
+     li [] [text itemDescription]
+
+   ul [] (List.map displayItem ["foo", "bar", "baz"]) -- revient au même qu'avant!
    ```
-   L'intérêt c'est que maintenant, on peut afficher une liste arbitraire
-   de mots:
+   On peut encapsuler cela dans une fonction, pour avoir un code très lisible et réutilisable après:
    ```elm
-   viewWords : List String -> Html Msg
-   viewWords words =
-       div [] (List.map text words)
+   viewListOfWords : List String -> Html Msg
+   viewListOfWords items =
+       ul [] (List.map displayItem items)
+
+   -- appels de la fonction :
+   viewListOfWords ["Sébastien", "Jean-Baptiste", "Tariq"]
+   viewListOfWords ["Bananes", "Abricots", "Pommes", "Pastèques"]
+
    ```
 
 > **\>\>\> À vous de jouer !**
@@ -150,11 +124,11 @@ Quelques choses à savoir sur les listes:
 > 1. Changez le modèle comme indiqué ci-dessus.
 > 2. Laissez vous guider par le compilateur pour corriger votre code !
 >    * pour l'instant codez "en dur" 3 cellules dans le `init`,
->    * dans la fonction `view`, utilisez `List.map` pour inclure
->      toutes les celulles dans un `div`.
+>    * dans la fonction `view : Model -> Html Msg`, utilisez `List.map`
+>    pour inclure toutes les celulles dans un `div`.
 > 3. Une fois que le code compile et que vos 3 cellules s'affichent,
 >    creez 100 cellules identiques dans le modèle initial ; la fonction
->    [`List.repeat`](https://package.elm-lang.org/packages/elm/core/latest/List#repeat){:target="_blank"}
+>    [`List.repeat` (lien cliquable!)](https://package.elm-lang.org/packages/elm/core/latest/List#repeat){:target="_blank"}
 >    peut être utile!
 > 4. Ajoutez les attributs `style "display" "grid"` et
 >    `style "grid-template-columns" "repeat(10, 50px)"` au `div` contenant
@@ -181,6 +155,8 @@ qu'à partir du moment où le code compile, il fonctionne comme on l'attend.
 > 1. Changer le type `Cell`, et laissez vous guider par le compilateur pour
 >    corriger le code. Pour l'instant mettez 1 comme `id` à toutes les
 >    cellules.
+
+**Fonctions anonymes**
 
 Rappelez-vous que grâce à `List.map` on peut appliquer une transformation à une liste. L'exemple que j'avais donné était:
 ```elm
@@ -446,7 +422,8 @@ Le schéma vu précédemment devient alors:
 >    entre 1 et 100*" et modifiez le `init` en conséquecne.
 >
 >    *Remarque: de cette façon, nous n'aurons pas forcément 20 mines car
->    on peut avoir plusieurs fois le même identifiant.*
+>    on peut avoir plusieurs fois le même identifiant (voir la partie
+>    [Finitions](#finitions) pour une idée d'algorithme.*
 >
 
 
@@ -541,8 +518,8 @@ type alias Cell =
 > **\>\>\> À vous de jouer !**
 >
 > {:start="3"}
-> 3. Remplacez le type `Cell` par celui donné ci-dessus. Faites compilez
->    votre code, tout devrait alors fonctionner !
+> 3. Remplacez le type `Cell` par celui donné ci-dessus. Faites en sorte
+>    que votre code compile, tout devrait alors fonctionner !
 >
 >    *Remarque :* comme pour les messages, on peut faire un `case`
 >    sur les valeurs de type `CellStatus` :
@@ -572,6 +549,11 @@ Pour avoir un jeu pleinement fonctionnel :
 4. Ajoutez un compteur de temps. Pour cela, ajouter un champ
    `elapsedTime: Float` dans le type `Model` et ajoutez une `subscription`
    sur [`onAnimationFrameDelta`](https://package.elm-lang.org/packages/elm/browser/latest/Browser-Events#onAnimationFrameDelta).
+5. Faites en sorte d'avoir exactement 20 mines. Pour cela, vous pouvez
+   créer une liste constituée de 20 éléments `True`, puis 80 éléments
+   `False`, de la mélanger grâce à [au module [`random-extra`](https://package.elm-lang.org/packages/elm-community/random-extra/latest/Random-List#shuffle)
+   (qu'il faudra installer). Puis, au lieu de `List.range`, utiliser
+   `List.indexedMap`.
 
 
 
