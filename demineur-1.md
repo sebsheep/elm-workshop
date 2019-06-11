@@ -23,6 +23,9 @@ connaissez pas, vous pouvez
 [essayer ici](http://demineur.hugames.fr/#level-3){:target="_blank"}
  [ou là](http://demineur.org/){:target="_blank"}.
 
+Lorsque vous aurez fini l'atelier, n'hésitez pas à
+[partager votre travail](https://annuel.framapad.org/p/atelier-elm-demineur-examples-sebbes)
+
 
 # Mise en place
 
@@ -49,7 +52,10 @@ contenue dans le modèle, on écrit: `model.cell.isMine`.
 >    modifiez la fonction `view` pour afficher une bombe si la cellule
 >    est une bombe et la chaîne "0" sinon (on ignore pour l'instant
 >    l'attribut `revealed`). On pourra utiliser l'emoji
->    suivant : 💣 (copiez-collez le dans votre code, c'est du texte !).
+>    suivant : 💣 (copiez-collez le dans votre code, c'est du texte !
+>    Remarque: dans un éditeur "hors-ligne" il peut ne pas s'afficher
+>    si la police ne supporte pas les emojis; il ne devrait pas y avoir
+>    de soucis dans le navigateur 😊).
 > 2. Testez votre code, en remplaçant le `isMine = False` par
 >    `isMine = True` dans le
 >    `init` puis en recompilant.
@@ -179,7 +185,7 @@ foo = List.map (\x -> 2 * x) [1, 2, 3]
 >    return 2 * x;
 > }
 > ```
-> ou:
+> ou (ES6):
 > ```javascript
 > x => 2 * x
 > ```
@@ -207,7 +213,7 @@ type Msg
     = Reveal Int
 ```
 On pourra alors constuire les messages `Reveal 1` pour révéler la cellule
-d'identifiant 1, `Reveal 32` pour celle d'identifiant 32....
+d'identifiant 1, `Reveal 32` pour celle d'identifiant 32...
 
 
 > **\>\>\> À vous de jouer !**
@@ -237,12 +243,53 @@ en conséquence.
 >    la fonction renvoie la cellule sans la modifier.
 >    Sinon, la fonction renvoie la cellule avec le champ `revealed`
 >    à `True`. Vérifiez que le code compile!
+
+Rappelez-vous que pour l'application "Compteur", nous avions écrit le
+code suivant pour réagir aux différents messages :
+
+```elm
+case msg of
+    Increment ->
+        ...
+
+    Decrement ->
+        ...
+```
+
+Ici, il y a un seul message possible et celui-ci a un argument. Nous
+pouvons alors effectuer le filtrage par motif ("pattern matching" en
+anglais) suivant:
+```elm
+case msg of
+    Reveal 1 ->
+        <reveal cell of id 1>
+
+    Reveal 2 ->
+        <reveal cell of id 2>
+
+    ...
+
+    Reveal 100 ->
+        <reveal cell of id 100>
+```
+
+Il serait bien trop long d'écrire cela de cette manière. Nous pouvons
+*capturer* l'identifiant en lui donnant un nom:
+```elm
+case msg of
+    Reveal id ->
+        <reveal cell of id ... "id">
+```
+
+> {:start="2"}
 > 2. Modifiez la fonction update pour intercepter les messages de la
 >    forme `Reveal id`. Ne cherchez pas à modifier le modèle, faites juste
 >    en sorte d'avoir un code qui compile.
-> 3. Modifier le modèle. *Indication:* on pourra utiliser `List.map`
+> 3. Modifier le modèle.
+>
+     **Indication:** on pourra utiliser `List.map`
 >    sur `model.cells`, avec une fonction anonyme faisant appel à
->    `revealIfId`.
+>    `revealIfId` (ne cherchez pas à être "efficace" ;) ).
 > 4. TADIN ! Cliquez sur votre grille, vous devez la "révéler" au fur et à
 >    mesure (bon pour l'instant, ce n'est pas très intéressant,
 >    il n'y a soit que des bombes, soit aucune bombe!).
@@ -295,8 +342,10 @@ Dans cette partie, on place les bombes de façon aléatoire sur la grille.
 > 2. Écrire une fonction `buildGrid : List Int -> List Cell` qui prend
 >    en argument la liste des identifiants de cellules qui doivent être des
 >    mines. Elle renvoie une liste de 100 cellules d'identifiant de 1
->    à 100. (le code ne devrait pas être très différent de celui du `init`
->    actuel)
+>    à 100 (le code ne devrait pas être très différent de celui du `init`
+>    actuel).
+>
+>    **Indication:** utiliser la fonction `List.member`.
 > 3. Réécrire le `init` en appelant `buildGrid [2, 3, 25, 35]` et testez
 >    que vos bombes s'affichent au bon endroit.
 
@@ -521,7 +570,7 @@ type alias Cell =
 > 3. Remplacez le type `Cell` par celui donné ci-dessus. Faites en sorte
 >    que votre code compile, tout devrait alors fonctionner !
 >
->    *Remarque :* comme pour les messages, on peut faire un `case`
+>    *Remarque :* comme pour les messages, on peut filtrer par motif
 >    sur les valeurs de type `CellStatus` :
 >    ```elm
 >    case cell.cellStatus of
@@ -536,6 +585,8 @@ type alias Cell =
 
 # Finitions
 
+N'oubliez pas de [partager votre travail](https://annuel.framapad.org/p/atelier-elm-demineur-examples-sebbes)!
+
 Pour avoir un jeu pleinement fonctionnel :
 1. Si le joueur révèle une mine, affichez un message de défaite,
    empêchez le de continuer à jouer et révélez toutes les mines.
@@ -546,22 +597,64 @@ Pour avoir un jeu pleinement fonctionnel :
 4. Si un utilisateur clique sur une case n'ayant aucun voisin miné,
    révéler toute la zone sans mines (il faudra programmer une fonction
    récursive ;) ).
-4. Ajoutez un compteur de temps. Pour cela, ajouter un champ
-   `elapsedTime: Float` dans le type `Model` et ajoutez une `subscription`
-   sur [`onAnimationFrameDelta`](https://package.elm-lang.org/packages/elm/browser/latest/Browser-Events#onAnimationFrameDelta).
-5. Faites en sorte d'avoir exactement 20 mines. Pour cela, vous pouvez
-   créer une liste constituée de 20 éléments `True`, puis 80 éléments
-   `False`, de la mélanger grâce à [au module [`random-extra`](https://package.elm-lang.org/packages/elm-community/random-extra/latest/Random-List#shuffle)
+5. Faites en sorte d'avoir exactement 20 mines. Pour cela, créez
+   une liste constituée de 20 éléments `True`, puis 80 éléments
+   `False`; mélanger cette liste grâce à [au module `random-extra`](https://package.elm-lang.org/packages/elm-community/random-extra/latest/Random-List#shuffle)
    (qu'il faudra installer). Puis, au lieu de `List.range`, utiliser
-   `List.indexedMap`.
+   [`List.indexedMap`](https://package.elm-lang.org/packages/elm/core/latest/List#indexedMap){:target="_blank"}.
+4. Ajoutez un compteur de temps. Nous allons capturer chaque
+   refraîchissement de la page (c'est à dire à chaque "frame")
+   afin de faire "avancer" un compteur de temps.
+
+   Pour cela, ajouter un champ
+   `elapsedTime: Float` dans le type `Model`, une variante de
+   message `NewFrame Float` puis définissez:
+   ```elm
+   subscriptions : Model -> Sub Msg
+   subscriptions model =
+       Browser.Events.onAnimationFrameDelta NewFrame
+   ```
+   Modifiez ensuite le `main` en remplaçant
+   `subscriptions = always Sub.none` par `subscriptions = subscriptions`.
+
+   Cela a pour effet de générer un nouveau message `NewFrame deltaT` à
+   chaque frame, le `deltaT` étant égal au temps écoulé depuis la frame
+   précédente (exprimé en milisecondes). Vous pouvez alors intercepter
+   ce message dans la fonction `update` pour incrémenter le champ
+   `elapsedTime`. À vous de jouer ensuite pour afficher le temps
+   "seconde par seconde".
+
+# Aller plus loin
+
+## Le guide officiel
+
+C'est ici : [http://guide.elm-lang.org/](http://guide.elm-lang.org/).
+
+Il est synthétique et reprend en profondeur les points explicités dans
+cet atelier. Il est ponctué de petits exercices en fin de chaque section
+pour s'exercer.
+
+## Demander de l'aide !
+
+Deux grandes plateformes :
+* [le slack Elm](https://elmlang.herokuapp.com/) très adapté pour de
+  courtes questions, ou un échange avec des programmeurs Elm expérimentés.
+  Rejoignez nous sur le channel #france, posez une question sur #beginners
+  et publiez vos exploits Elmiens sur #news-and-links!
+* [le Discourse](https://discourse.elm-lang.org/) pour des questions plus
+  poussées.
 
 
+## Se retrouver
 
+En france, il y a plusieurs "Meetup" Elm :
+* à [Paris](https://www.meetup.com/fr-FR/Meetup-Elm-Paris/),
+* à [Toulouse](https://www.meetup.com/fr-FR/Elm-Toulouse/),
+* et à [Lyon](https://www.meetup.com/fr-FR/Elm-Lyon-Meetup/).
 
+Paris héberge le plus gros rassemblement mondial autour de Elm :
+la [conférence Elm Europe](https://2019.elmeurope.org/).
 
-
-
-
-
-
-
+Envie d'organiser un événement autour de Elm dans votre
+ville/entreprise/école d'ingé ? Venez en discuter sur Slack sur
+le channel #france!
