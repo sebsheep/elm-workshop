@@ -145,8 +145,7 @@ Testez le code (rappel: `Ctrl + Maj + Entrée` pour compiler) puis rendez-vous d
 > 3. Copiez-collez le code ci-dessous dans le fichier `src/Main.elm` (le dossier
 >    `src` est déjà créé normalement).
 > 4. Lancez `elm reactor` en étant dans le dossier `elm-workshop`.
-> 5. Ouvez un navigateur à l'adresse [http://localhost:8000](http://localhost:8000)
->    et testez l'application.
+> 5. Ouvez un navigateur à l'adresse [http://localhost:8000](http://localhost:8000), selectionnez le dossier `src` puis le fichier `Main.elm` pour tester l'application
 
 ```elm
 module Main exposing (main)
