@@ -506,7 +506,7 @@ On cherche ici à compter les mines autour de chaque case.
 >    comptage est correct.
 
 
-# Ajouter les dapreaux !
+# Ajouter les drapeaux !
 
 On gère ici l'ajout des drapeaux (grâce au "clic droit"). On utilise
 pour cela l'événement JS `contextmenu` ; cet évènement n'est pas
